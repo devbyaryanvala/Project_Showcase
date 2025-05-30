@@ -1,0 +1,585 @@
+/* ROOT VARIABLES FOR THEMING AND CONSISTENCY */
+:root {
+    --primary-font: 'Roboto', Arial, sans-serif;
+    --accent-font: 'Headland One', serif; /* Assuming this is for logo or specific headers */
+
+    --bg-dark-primary: #1A1E23; /* Deep dark for main background */
+    --bg-dark-secondary: #222831; /* Slightly lighter for cards/sections */
+    --bg-dark-tertiary: #31363F; /* For elements needing a bit more separation */
+    
+    --text-light-primary: #F0F0F0; /* Main light text */
+    --text-light-secondary: #B0B0B0; /* Softer light text */
+    --text-dark-primary: #111111;
+
+    --accent-primary: #FF8C00; /* Bright orange */
+    --accent-secondary: #FFD369; /* Gold/Yellow */
+    --accent-error: #FF6B6B; /* For warnings */
+
+    --shadow-color-light: rgba(255, 255, 255, 0.05);
+    --shadow-color-dark: rgba(0, 0, 0, 0.4);
+    --shadow-color-accent: rgba(255, 140, 0, 0.3);
+
+    --border-radius-small: 6px;
+    --border-radius-medium: 12px;
+    --border-radius-large: 20px;
+    --border-radius-pill: 50px;
+
+    --transition-fast: 0.2s ease-out;
+    --transition-medium: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-slow: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* GLOBAL RESETS AND BASE STYLES */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px; /* Base font size */
+}
+
+body {
+    font-family: var(--primary-font);
+    background-color: var(--bg-dark-primary);
+    color: var(--text-light-primary);
+    line-height: 1.7;
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(var(--accent-primary-rgb), 0.05), transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(var(--accent-secondary-rgb), 0.05), transparent 40%),
+        var(--bg-dark-primary); /* No image, subtle gradient dots */
+    background-attachment: fixed;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utility for converting hex to rgb for rgba usage if needed elsewhere, not directly used in this example for simplicity */
+/* Helper function (conceptual, not CSS) to set --accent-primary-rgb and --accent-secondary-rgb if needed */
+/* E.g. --accent-primary-rgb: 255, 140, 0; */
+
+
+/* CUSTOM SCROLLBAR (WEBKIT) */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-dark-secondary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: var(--border-radius-pill);
+    border: 2px solid var(--bg-dark-secondary);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-secondary);
+}
+
+
+/* ACCESSIBILITY: FOCUS STYLES */
+:focus-visible {
+    outline: 3px solid var(--accent-secondary);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(var(--accent-secondary-rgb, 255, 211, 105), 0.3); /* Assuming --accent-secondary-rgb is set */
+    border-radius: var(--border-radius-small);
+}
+/* Remove outline for non-keyboard focus if desired, but :focus-visible handles this well */
+
+
+/* MAIN LAYOUT AND TYPOGRAPHY */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-light-primary);
+}
+.section-title {
+    font-size: clamp(2.2rem, 5vw, 3rem);
+    margin-bottom: 60px; /* Increased margin */
+    color: var(--accent-primary);
+    text-align: center;
+    position: relative;
+    padding-bottom: 20px; /* Increased padding */
+    text-transform: uppercase;
+    letter-spacing: 1.5px; /* Wider spacing */
+    animation: slideInFromBottom 0.8s var(--transition-slow) forwards;
+    opacity: 0; /* Start hidden for animation */
+}
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 80px; /* Slightly smaller */
+    height: 5px; /* Thicker line */
+    background: linear-gradient(90deg, var(--accent-secondary), var(--accent-primary)); /* Gradient underline */
+    border-radius: var(--border-radius-pill);
+    animation: stretchUnderline 1s var(--transition-slow) 0.5s forwards;
+    transform-origin: center;
+    width: 0; /* Start with 0 width for animation */
+}
+@keyframes stretchUnderline {
+    to { width: 80px; }
+}
+
+
+/* NAVBAR */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: transparent; /* Start fully transparent */
+    padding: 20px 0;
+    z-index: 1000;
+    transition: background-color var(--transition-medium), 
+                padding var(--transition-medium), 
+                box-shadow var(--transition-medium),
+                top var(--transition-medium); /* Added top for hide/show */
+    will-change: background-color, padding, box-shadow; /* Performance hint */
+}
+.navbar.scrolled {
+    background-color: rgba(var(--bg-dark-secondary-rgb, 34, 40, 49), 0.85); /* Use RGB for opacity */
+    padding: 12px 0;
+    box-shadow: 0 5px 25px var(--shadow-color-dark);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+.logoanc {
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
+    font-family: var(--accent-font);
+    font-weight: 700;
+    color: var(--accent-primary) !important;
+    text-decoration: none;
+    transition: color var(--transition-medium), transform var(--transition-medium);
+    letter-spacing: -0.5px; /* Slightly condensed */
+}
+.logoanc:hover {
+    color: var(--accent-secondary) !important;
+    transform: scale(1.03) rotate(-2deg); /* Playful hover */
+}
+.nav-links-container {
+    display: flex;
+    gap: 35px; /* Increased gap */
+}
+.nav-link {
+    color: var(--text-light-secondary);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.05rem;
+    padding: 10px 5px; /* Adjust padding for underline effect */
+    transition: color var(--transition-medium), transform var(--transition-medium);
+    position: relative;
+    letter-spacing: 0.5px;
+}
+.nav-link::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent-secondary);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1); /* Faster, more dynamic easing */
+}
+.nav-link:hover::before, .nav-link:focus::before {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+.nav-link:hover, .nav-link:focus {
+    color: var(--accent-primary);
+    transform: translateY(-3px); /* More lift */
+}
+
+/* HEADER */
+header {
+    color: var(--text-light-primary);
+    padding: clamp(120px, 25vh, 200px) 20px 80px; /* Dynamic padding */
+    text-align: center;
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* For potential pseudo-elements */
+    overflow: hidden; /* Prevent pseudo-elements from spilling */
+}
+header::before { /* Subtle animated background shapes */
+    content: '';
+    position: absolute;
+    top: 10%; left: 15%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(var(--accent-primary-rgb), 0.1), transparent 70%);
+    border-radius: 50%;
+    animation: float 15s ease-in-out infinite alternate;
+    z-index: -1;
+}
+header::after {
+    content: '';
+    position: absolute;
+    bottom: 15%; right: 10%;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(var(--accent-secondary-rgb), 0.08), transparent 70%);
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; /* Organic shape */
+    animation: float 20s ease-in-out infinite alternate-reverse 1s; /* Different timing */
+    z-index: -1;
+}
+@keyframes float {
+    0% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+    50% { transform: translateY(-30px) translateX(20px) rotate(180deg); }
+    100% { transform: translateY(0px) translateX(0px) rotate(360deg); }
+}
+header h1 {
+    margin: 0 0 20px 0;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 700;
+    letter-spacing: -1px; /* Slightly tighter for large text */
+    color: var(--text-light-primary);
+    animation: text-shadow-pop-bottom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both;
+}
+@keyframes text-shadow-pop-bottom {
+  0% { text-shadow: 0 0 #000, 0 0 #000, 0 0 #000, 0 0 #000; transform: translateY(0); }
+  100% { text-shadow: 0 1px var(--accent-primary), 0 2px var(--accent-primary), 0 3px var(--accent-primary), 0 4px var(--accent-primary); transform: translateY(-2px); }
+}
+header h2 {
+    margin: 0 0 30px 0;
+    font-size: clamp(1.5rem, 4vw, 2.4rem);
+    color: var(--accent-secondary);
+    font-weight: 400;
+    animation: text-focus-in 1.2s cubic-bezier(0.550, 0.085, 0.680, 0.530) 1s both;
+}
+header .intro p {
+    margin: 15px auto 40px auto; /* Centered */
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    max-width: 750px;
+    line-height: 1.8;
+    color: var(--text-light-secondary);
+    animation: focus-in-contract-bck 1.2s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1.5s backwards;
+}
+.intro button {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); /* Gradient button */
+    color: var(--text-dark-primary);
+    padding: 16px 35px;
+    border: none;
+    border-radius: var(--border-radius-pill);
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 20px var(--shadow-color-accent);
+    transition: transform var(--transition-bounce), box-shadow var(--transition-medium), background-size var(--transition-medium);
+    margin: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden; /* For ripple/shine effect */
+    background-size: 100% 100%;
+}
+.intro button:hover, .intro button:focus {
+    transform: translateY(-6px) scale(1.08); /* More pop */
+    box-shadow: 0 10px 30px var(--shadow-color-accent);
+    background-size: 150% 150%; /* Subtle zoom on gradient */
+}
+.intro button::after { /* Shine effect on hover */
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 20%;
+    height: 200%;
+    background: rgba(255,255,255,0.2);
+    transform: rotate(25deg);
+    transition: left var(--transition-slow);
+    opacity: 0;
+}
+.intro button:hover::after {
+    left: 130%;
+    opacity: 1;
+    transition: left 0.8s cubic-bezier(0.19, 1, 0.22, 1); /* Smooth shine */
+}
+
+/* ACHIEVEMENTS SECTION */
+.achievements {
+    padding: 80px 20px;
+    background-color: var(--bg-dark-secondary);
+    text-align: center;
+    position: relative; /* For decorative elements */
+    overflow: hidden;
+}
+/* Add a subtle pattern or texture if desired */
+/* .achievements::before { ... } */
+.achievements-container {
+    display: grid; /* Using grid for more robust layout */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.achievements .work {
+    background: var(--bg-dark-tertiary);
+    padding: 35px;
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Softer shadow */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform var(--transition-slow), box-shadow var(--transition-slow), background-color var(--transition-slow);
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+    animation: cardEntry 0.7s var(--transition-slow) forwards;
+    will-change: transform, box-shadow;
+    position: relative; /* For inner glow */
+    overflow: hidden;
+}
+.achievements .work::before { /* Inner glow effect on hover */
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: var(--border-radius-medium);
+    padding: 2px; /* Thickness of the glow */
+    background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out; 
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+}
+.achievements .work:hover::before {
+    opacity: 1;
+}
+.achievements .work:hover {
+    transform: translateY(-12px) scale(1.03); /* Enhanced hover */
+    box-shadow: 0 18px 45px rgba(0,0,0,0.3);
+    background-color: lighten(var(--bg-dark-tertiary), 5%);
+}
+/* Staggered animation delays */
+.achievements .work:nth-child(1) { animation-delay: 0.3s; }
+.achievements .work:nth-child(2) { animation-delay: 0.5s; }
+.achievements .work:nth-child(3) { animation-delay: 0.7s; }
+
+@keyframes cardEntry {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.achievements .work i {
+    font-size: 3.8rem;
+    color: var(--accent-primary);
+    margin-bottom: 25px;
+    transition: transform 0.4s var(--transition-bounce), color var(--transition-medium);
+}
+.achievements .work:hover i {
+    transform: scale(1.15) rotate(-8deg) translateY(-5px); /* More dynamic icon */
+    color: var(--accent-secondary);
+}
+.achievements .work .work-heading {
+    font-size: 1.6rem;
+    color: var(--text-light-primary);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+.achievements .work .work-text {
+    font-size: 1.05rem;
+    color: var(--text-light-secondary);
+    line-height: 1.7;
+}
+
+/* PROJECTS SECTION */
+#projects {
+    padding: 80px 20px;
+    /* background-color: var(--bg-dark-primary); // Already body background */
+    text-align: center;
+}
+.project {
+    background: var(--bg-dark-secondary);
+    border-radius: var(--border-radius-large); /* More rounded */
+    margin: 40px auto;
+    padding: 0; /* Remove padding, image will be flush */
+    max-width: 750px; /* Wider cards */
+    box-shadow: 0 15px 40px var(--shadow-color-dark);
+    transition: transform var(--transition-slow), box-shadow var(--transition-slow);
+    opacity: 0;
+    transform: translateY(60px);
+    animation: cardEntry 0.7s var(--transition-slow) forwards; /* Re-using cardEntry */
+    overflow: hidden; /* Crucial for image zoom effect */
+    position: relative;
+}
+#projects .project:nth-child(odd) { animation-delay: 0.4s; }
+#projects .project:nth-child(even) { animation-delay: 0.6s; }
+
+.project:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 25px 55px var(--shadow-color-dark);
+}
+.project .project-image-container {
+    width: 100%;
+    height: 350px; /* Fixed height for image container */
+    overflow: hidden;
+    border-radius: var(--border-radius-large) var(--border-radius-large) 0 0; /* Rounded top corners */
+}
+.project img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure image covers container */
+    display: block;
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), filter var(--transition-medium); /* Slower, smoother zoom */
+}
+.project:hover img {
+    transform: scale(1.1); /* Zoom image on card hover */
+    filter: brightness(1.05) saturate(1.1); /* Enhance colors */
+}
+.project-content {
+    padding: 30px 35px; /* Padding for text content */
+}
+.project h3 {
+    margin: 0 0 15px 0; /* Adjusted margin */
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    color: var(--accent-secondary);
+    font-weight: 600;
+}
+.project p {
+    font-size: 1.1rem;
+    color: var(--text-light-secondary);
+    line-height: 1.8;
+    margin-bottom: 25px; /* Space before links */
+}
+.project a {
+    display: inline-block;
+    margin-top: 10px; /* Reduced top margin */
+    margin-right: 15px;
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 12px 25px;
+    border: 2px solid var(--accent-primary);
+    border-radius: var(--border-radius-pill);
+    transition: all var(--transition-medium); /* Smooth all properties */
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.project a::before { /* Background fill animation */
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: var(--accent-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-medium);
+    z-index: -1;
+}
+.project a:hover::before {
+    transform: scaleX(1);
+}
+.project a:hover {
+    color: var(--bg-dark-secondary); /* Text color changes on hover */
+    border-color: var(--accent-primary); /* Keep border color consistent */
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(var(--accent-primary-rgb), 0.2);
+}
+/* Warning Text Styling */
+.project p[style*="color: red"] {
+    background-color: rgba(var(--accent-error-rgb, 255, 107, 107), 0.1);
+    color: var(--accent-error) !important;
+    padding: 15px;
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--accent-error);
+    font-weight: bold;
+    margin-top: 25px;
+    box-shadow: 0 0 12px rgba(var(--accent-error-rgb), 0.2);
+}
+
+/* FOOTER */
+footer {
+    background: var(--bg-dark-primary); /* Match body bg */
+    border-top: 1px solid var(--shadow-color-light); /* Subtle separator */
+    color: var(--text-light-secondary);
+    text-align: center;
+    padding: 50px 20px;
+    margin-top: 80px;
+}
+footer p {
+    margin: 12px 0;
+    font-size: 1rem;
+}
+footer a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color var(--transition-medium), text-shadow var(--transition-medium);
+    font-weight: bold;
+}
+footer a:hover {
+    color: var(--accent-secondary);
+    text-shadow: 0 0 8px rgba(var(--accent-secondary-rgb), 0.6);
+    text-decoration: underline;
+    text-decoration-style: wavy; /* Playful underline */
+    text-underline-offset: 4px;
+}
+
+/* GENERAL KEYFRAME ANIMATIONS (RE-USABLE) */
+@keyframes slideInFromBottom {
+    from { opacity: 0; transform: translateY(80px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes text-focus-in { /* Re-used from header, ensure it's general if needed */
+  0% { filter: blur(12px); opacity: 0; }
+  100% { filter: blur(0px); opacity: 1; }
+}
+@keyframes focus-in-contract-bck { /* Re-used from header */
+  0% { letter-spacing: 1em; transform: translateZ(300px); filter: blur(12px); opacity: 0; }
+  100% { transform: translateZ(12px); filter: blur(0); opacity: 1; }
+}
+/* Add conceptual --*-rgb variables at the top if you use rgba extensively with CSS vars */
+/* For example:
+:root {
+    ...
+    --accent-primary-rgb: 255, 140, 0;
+    --accent-secondary-rgb: 255, 211, 105;
+    --bg-dark-secondary-rgb: 34, 40, 49;
+    --accent-error-rgb: 255, 107, 107;
+}
+*/
+
+/* RESPONSIVE ADJUSTMENTS */
+@media (max-width: 992px) {
+    .achievements-container {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjust for slightly smaller screens */
+    }
+}
+@media (max-width: 768px) {
+    html { font-size: 15px; } /* Slightly reduce base font for smaller screens */
+    .navbar .container { flex-direction: column; gap: 15px; }
+    .navbar.scrolled { padding: 10px 0; }
+    .nav-links-container { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 15px 25px; } /* Allow wrapping of nav links */
+    .nav-link { font-size: 1rem; }
+    header { padding-top: 100px; min-height: auto; } /* Adjust header padding for stacked navbar */
+    header h1 { font-size: clamp(2.5rem, 10vw, 4rem); }
+    header h2 { font-size: clamp(1.3rem, 6vw, 2rem); }
+    .section-title { font-size: clamp(1.8rem, 6vw, 2.5rem); margin-bottom: 40px; padding-bottom: 15px; }
+    .project .project-image-container { height: 280px; } /* Adjust image height */
+    .project-content { padding: 25px; }
+}
+@media (max-width: 480px) {
+    html { font-size: 14px; }
+    .intro button { padding: 14px 28px; }
+    .nav-links-container { gap: 10px 20px; }
+    .project .project-image-container { height: 220px; }
+    .project h3 { font-size: clamp(1.4rem, 5vw, 1.8rem); }
+    .project p { font-size: 1rem; }
+    .project a { padding: 10px 20px; font-size: 0.9rem; }
+    .achievements .work { padding: 25px; }
+    .achievements .work .work-heading { font-size: 1.4rem; }
+    .achievements .work .work-text { font-size: 0.95rem; }
+}
